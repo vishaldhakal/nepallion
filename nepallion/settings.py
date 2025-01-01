@@ -6,10 +6,8 @@ from dotenv import load_dotenv
 
 load_dotenv()  # loads the configs from .env
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -22,7 +20,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -33,8 +30,6 @@ INSTALLED_APPS = [
     "unfold.contrib.import_export",  
     "unfold.contrib.guardian",  
     "unfold.contrib.simple_history",  
-    'ckeditor',
-    'ckeditor_uploader',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,6 +39,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_multiple_model',
     'tinymce',
+    'ckeditor',
+    'ckeditor_uploader',
     'home',
     'about',
     'activity',
@@ -52,6 +49,7 @@ INSTALLED_APPS = [
     'django_summernote',
     'solo',
     'corsheaders',
+    'pages',
 ]
 
 MIDDLEWARE = [
@@ -85,31 +83,28 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'nepallion.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = None
 
-
-""" DATABASES = {
+DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-} """
+} 
 
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "nepallion",
-        "USER": "vishal",
-        "PASSWORD": "DatabaseUserPassword",
-        "HOST": "localhost",
-        "PORT": "",
-    }
-}
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql_psycopg2",
+#         "NAME": "nepallion",
+#         "USER": "vishal",
+#         "PASSWORD": "DatabaseUserPassword",
+#         "HOST": "localhost",
+#         "PORT": "",
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -129,7 +124,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -140,7 +134,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
@@ -168,7 +161,6 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'resend'
 EMAIL_HOST_PASSWORD = os.getenv("RESEND_APIKEY", default="")
 
-
 UNFOLD = {
     "SITE_HEADER": _("Nepal Lion Trekking Admin"),
     "SITE_TITLE": _("Nepal Lion Trekking Admin"),
@@ -179,7 +171,6 @@ UNFOLD = {
         "navigation_expanded": True,
     },
 }
-
 
 SUMMERNOTE_CONFIG = {
     'summernote': {
@@ -238,4 +229,3 @@ TINYMCE_DEFAULT_CONFIG = {
 }
 
 CSRF_TRUSTED_ORIGINS = ['https://4963-110-44-120-22.ngrok.io',]
-
