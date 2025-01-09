@@ -86,7 +86,18 @@ class ActivityAdmin(ModelAdmin):
             )
         }),
         ("Tour Details", {
-            "fields": ("heroImg", "coverImg","location", "duration", "trip_grade","max_group_size", "best_time","ratings","availableStart", "availableEnd","trek_map", "altitude_chart")
+            "fields": ("heroImg", "coverImg","location", "duration","max_group_size","trip_grade","best_time","ratings","availableStart", "availableEnd","trek_map", "altitude_chart")
+        }),
+        ("Tour Summaries", {
+            "fields": (
+                "country",
+                "trip_duration",
+                "group_size",
+                "accommodation",
+                "max_height",
+                "trip_type",
+                "meals"
+            )
         }),
         ("Tour Description", {
             "fields": (

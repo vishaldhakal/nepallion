@@ -78,6 +78,13 @@ class Activity(models.Model):
     trek_map = models.FileField(blank=True)
     altitude_chart = models.FileField(blank=True)
     additional_info = tinymce_models.HTMLField(blank=True)
+    country = models.CharField(max_length=500, blank=True)
+    trip_duration = models.CharField(max_length=500, blank=True)
+    group_size = models.CharField(max_length=500, blank=True)
+    accommodation = models.CharField(max_length=500, blank=True)
+    max_height = models.CharField(max_length=500, blank=True)
+    trip_type = models.CharField(max_length=500, blank=True)
+    meals = models.CharField(max_length=500,blank=True)
 
     class Meta:
         ordering = ['createdAt']
