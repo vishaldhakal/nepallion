@@ -3,7 +3,7 @@ from django.db import models
 from .models import (
     ActivityTestimonial, ActivityTestimonialImage, ActivityCategory, 
     ActivityBooking, ActivityEnquiry, ActivityPricing, Activity, 
-    ItineraryActivity, ActivityImage, Destination, ActivityRegion, ActivityFAQ
+    ItineraryActivity, ActivityImage, Destination, ActivityRegion, ActivityFAQ, ActivityCheckout
 )
 from unfold.admin import ModelAdmin, TabularInline, StackedInline
 from tinymce.widgets import TinyMCE
@@ -292,6 +292,32 @@ class ActivityBookingAdmin(ModelAdmin):
         })
     )
 
+class ActivityCheckoutAdmin(ModelAdmin):
+    list_display = (
+        "__str__",
+        "full_name",
+        "activity",
+        "total_travelers",
+        "departure_date",
+        "status",
+        "created_at"
+    )
+    list_filter = ("status", "departure_date", "created_at", "activity")
+    fieldsets = (
+        ("Checkout Information", {
+            "fields": (
+                "activity",
+                ("full_name", "email", "phone"),
+                "country",
+                "total_travelers",
+                "departure_date",
+                "status"
+            )
+        }),
+    )
+    search_fields = ("full_name", "email", "phone")
+    ordering = ("-created_at",)
+
 admin.site.register(Destination, DestinationAdmin)
 admin.site.register(ActivityCategory, ActivityCategoryAdmin)
 admin.site.register(Activity, ActivityAdmin)
@@ -303,3 +329,4 @@ admin.site.register(ActivityRegion, ActivityRegionAdmin)
 admin.site.register(ActivityEnquiry, ModelAdmin)
 admin.site.register(ActivityTestimonial, ActivityTestimonialAdmin)
 admin.site.register(ActivityBooking, ActivityBookingAdmin)
+admin.site.register(ActivityCheckout, ActivityCheckoutAdmin)

@@ -196,3 +196,31 @@ class ItineraryActivity(models.Model):
 
     def __str__(self) -> str:
           return self.title
+
+class ActivityCheckout(models.Model):
+    activity = models.ForeignKey(Activity, on_delete=models.CASCADE, related_name='checkouts')
+    full_name = models.CharField(max_length=200)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+    country = models.CharField(max_length=100)
+    total_travelers = models.PositiveIntegerField()
+    departure_date = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ('pending', 'Pending'),
+            ('confirmed', 'Confirmed'),
+            ('cancelled', 'Cancelled')
+        ],
+        default='pending'
+    )
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Activity Checkout'
+        verbose_name_plural = 'Activity Checkouts'
+
+    def __str__(self):
+        return f"{self.full_name} - {self.activity.activity_title} ({self.total_travelers} travelers)"
