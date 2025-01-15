@@ -1,4 +1,4 @@
-from .models import Activity,ActivityTestimonialImage,ActivityPricing,ActivityBooking,ActivityEnquiry,ActivityCategory,ItineraryActivity,ActivityImage,Destination,ActivityRegion,ActivityFAQ,ActivityTestimonial
+from .models import Activity,ActivityTestimonialImage,ActivityPricing,ActivityBooking,ActivityEnquiry,ActivityCategory,ItineraryActivity,ActivityImage,Destination,ActivityRegion,ActivityFAQ,ActivityTestimonial, ActivityCheckout
 from rest_framework import serializers
 
 class ActivityEnquirySerializer(serializers.ModelSerializer):
@@ -135,3 +135,20 @@ class ActivitySlugSerializer(serializers.ModelSerializer):
     class Meta:
         model = Activity
         fields = ('id','slug')
+
+class ActivityCheckoutSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ActivityCheckout
+        fields = [
+            'id',
+            'activity',
+            'full_name',
+            'email',
+            'phone',
+            'country',
+            'total_travelers',
+            'departure_date',
+            'status',
+            'created_at'
+        ]
+        read_only_fields = ['status', 'created_at']

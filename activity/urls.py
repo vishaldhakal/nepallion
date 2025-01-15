@@ -15,4 +15,11 @@ urlpatterns = [
     path('activities-region-wise/<str:slug>/', views.activities_all_region),
     path('activities-featured/', views.activities_featured),
     path('sign/', views.sign_view, name='sign_view'),
+    
+    # Checkout endpoints
+    path('activity-checkouts/', views.activity_checkouts_collection),
+    path('activity-checkout/<str:slug>/', views.activity_checkout_single),
+    path('activity-checkout/create/', views.activity_checkout_create),
+    path('activity-checkout/update/<str:slug>/', views.activity_checkout_update),
+    path('activity-checkout/delete/<str:slug>/', views.activity_checkout_delete),
 ]

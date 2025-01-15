@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Activity,ActivityCategory,ActivityBooking,Destination,ActivityTestimonial,ItineraryActivity,ActivityImage,ActivityRegion
-from .serializers import ActivityCategorySlugSerializer,ActivityTestimonialSerializer,ActivityBookingSerializer,ActivityRegionSlugSerializer,DestinationSerializerSmall,ActivitySlugSerializer,DestinationSerializer,ActivityCategorySerializer,ActivitySerializer,ItineraryActivitySerializer,ActivityImageSerializer,ActivitySmallSerializer,ActivityRegionSerializer,ActivityRegionSmallSerializer
+from rest_framework import permissions
+from rest_framework import status
+from .models import Activity,ActivityCategory,ActivityBooking,Destination,ActivityTestimonial,ItineraryActivity,ActivityImage,ActivityRegion, ActivityCheckout
+from .serializers import ActivityCategorySlugSerializer,ActivityTestimonialSerializer,ActivityBookingSerializer,ActivityRegionSlugSerializer,DestinationSerializerSmall,ActivitySlugSerializer,DestinationSerializer,ActivityCategorySerializer,ActivitySerializer,ItineraryActivitySerializer,ActivityImageSerializer,ActivitySmallSerializer,ActivityRegionSerializer,ActivityRegionSmallSerializer, ActivityCheckoutSerializer
 import json
 from django.core import serializers
 from django.db.models import DateField
@@ -276,3 +278,100 @@ def activity_images_collection(request):
         activity_images = ActivityImage.objects.all()
         serializer_activity_images = ActivityImageSerializer(activity_images, many=True)
         return Response(serializer_activity_images.data)
+
+@api_view(['POST'])
+def activity_checkout(request):
+    if request.method == 'POST':
+        serializer = ActivityCheckoutSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    'status': 'success',
+                    'message': 'Checkout created successfully',
+                    'data': serializer.data
+                },
+                status=status.HTTP_201_CREATED
+            )
+        return Response(
+            {
+                'status': 'error',
+                'message': 'Invalid data provided',
+                'errors': serializer.errors
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+@api_view(['GET'])
+def activity_checkouts_collection(request):
+    if request.method == 'GET':
+        checkouts = ActivityCheckout.objects.all()
+        serializer = ActivityCheckoutSerializer(checkouts, many=True)
+        return Response(serializer.data)
+
+@api_view(['GET'])
+def activity_checkout_single(request,slug):
+    if request.method == 'GET':
+        checkout = ActivityCheckout.objects.get(slug=slug)
+        serializer = ActivityCheckoutSerializer(checkout)
+        return Response(serializer.data)
+
+@api_view(['POST'])
+def activity_checkout_create(request):
+    if request.method == 'POST':
+        serializer = ActivityCheckoutSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    'status': 'success',
+                    'message': 'Checkout created successfully',
+                    'data': serializer.data
+                },
+                status=status.HTTP_201_CREATED
+            )
+        return Response(
+            {
+                'status': 'error',
+                'message': 'Invalid data provided',
+                'errors': serializer.errors
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+@api_view(['PUT'])
+def activity_checkout_update(request,slug):
+    if request.method == 'PUT':
+        checkout = ActivityCheckout.objects.get(slug=slug)
+        serializer = ActivityCheckoutSerializer(checkout, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    'status': 'success',
+                    'message': 'Checkout updated successfully',
+                    'data': serializer.data
+                },
+                status=status.HTTP_200_OK
+            )
+        return Response(
+            {
+                'status': 'error',
+                'message': 'Invalid data provided',
+                'errors': serializer.errors
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+@api_view(['DELETE'])
+def activity_checkout_delete(request,slug):
+    if request.method == 'DELETE':
+        checkout = ActivityCheckout.objects.get(slug=slug)
+        checkout.delete()
+        return Response(
+            {
+                'status': 'success',
+                'message': 'Checkout deleted successfully'
+            },
+            status=status.HTTP_200_OK
+        )
