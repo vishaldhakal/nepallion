@@ -153,13 +153,14 @@ CORS_ALLOW_ALL_ORIGINS = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-EMAIL_USE_TLS = True
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.resend.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'resend'
-EMAIL_HOST_PASSWORD = os.getenv("RESEND_APIKEY", default="")
+# EMAIL_USE_TLS = True
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.resend.com'
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = 'resend'
+# EMAIL_HOST_PASSWORD = os.getenv("RESEND_APIKEY", default="")
 
 UNFOLD = {
     "SITE_HEADER": _("Nepal Lion Trekking Admin"),
