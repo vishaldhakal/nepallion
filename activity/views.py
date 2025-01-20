@@ -310,9 +310,9 @@ def activity_checkouts_collection(request):
         return Response(serializer.data)
 
 @api_view(['GET'])
-def activity_checkout_single(request,slug):
+def activity_checkout_single(request, id):
     if request.method == 'GET':
-        checkout = ActivityCheckout.objects.get(slug=slug)
+        checkout = ActivityCheckout.objects.get(id=id)
         serializer = ActivityCheckoutSerializer(checkout)
         return Response(serializer.data)
 
@@ -340,9 +340,9 @@ def activity_checkout_create(request):
         )
 
 @api_view(['PUT'])
-def activity_checkout_update(request,slug):
+def activity_checkout_update(request, id):
     if request.method == 'PUT':
-        checkout = ActivityCheckout.objects.get(slug=slug)
+        checkout = ActivityCheckout.objects.get(id=id)
         serializer = ActivityCheckoutSerializer(checkout, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -364,9 +364,9 @@ def activity_checkout_update(request,slug):
         )
 
 @api_view(['DELETE'])
-def activity_checkout_delete(request,slug):
+def activity_checkout_delete(request, id):
     if request.method == 'DELETE':
-        checkout = ActivityCheckout.objects.get(slug=slug)
+        checkout = ActivityCheckout.objects.get(id=id)
         checkout.delete()
         return Response(
             {

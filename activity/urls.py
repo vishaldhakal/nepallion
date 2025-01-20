@@ -18,8 +18,8 @@ urlpatterns = [
     
     # Checkout endpoints
     path('activity-checkouts/', views.activity_checkouts_collection),
-    path('activity-checkout/<str:slug>/', views.activity_checkout_single),
+    path('activity-checkout/<int:id>/', views.activity_checkout_single),
     path('activity-checkout/create/', views.activity_checkout_create),
-    path('activity-checkout/update/<str:slug>/', views.activity_checkout_update),
-    path('activity-checkout/delete/<str:slug>/', views.activity_checkout_delete),
+    path('activity-checkout/update/<int:id>/', views.activity_checkout_update),
+    path('activity-checkout/delete/<int:id>/', views.activity_checkout_delete),
 ]
