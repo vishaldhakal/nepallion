@@ -22,4 +22,5 @@ urlpatterns = [
     path('activity-checkout/create/', views.activity_checkout_create),
     path('activity-checkout/update/<int:id>/', views.activity_checkout_update),
     path('activity-checkout/delete/<int:id>/', views.activity_checkout_delete),
+    path('activities-autocomplete/', views.activity_autocomplete),
 ]

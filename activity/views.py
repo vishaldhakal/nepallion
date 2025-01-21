@@ -375,3 +375,21 @@ def activity_checkout_delete(request, id):
             },
             status=status.HTTP_200_OK
         )
+
+@api_view(['GET'])
+def activity_autocomplete(request):
+    query = request.GET.get('query', '').lower()
+    activities = Activity.objects.filter(activity_title__icontains=query)[:10]  # Limit to 10 results
+    
+    results = []
+    for activity in activities:
+        results.append({
+            'title': activity.activity_title,
+            'slug': activity.slug,
+            'coverImage': activity.coverImg.url if activity.coverImg else None,
+            'duration': activity.duration,
+            'price': activity.price,
+            'region': activity.activity_region.title if activity.activity_region else None
+        })
+    
+    return Response(results, status=status.HTTP_200_OK)
