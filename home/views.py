@@ -7,12 +7,11 @@ from .serializers import FAQSerializer,LegalDocumentSerializer,FeaturedTourSeria
 from blog.models import Post
 from blog.serializers import PostSmallSerializer
 from activity.models import ActivityCategory,Activity,ActivityEnquiry,ActivityBooking
-from activity.serializers import ActivityCategorySerializer,ActivitySmallSerializer,ActivityCategory2Serializer
+from activity.serializers import ActivityCategorySerializer,ActivitySmallSerializer,ActivityCategory2Serializer,ActivitySmallestSerializer,ActivityBooking2Serializer
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from datetime import datetime
-from activity.serializers import ActivityBooking2Serializer
 from datetime import date
 
 
@@ -273,9 +272,26 @@ def landing_page(request):
         bookings = ActivityBooking.objects.filter(booking_date__gte=today).order_by('-booking_date')[:10]
         bookings_serializer = ActivityBooking2Serializer(bookings,many=True)
 
-        activities = FeaturedTour.objects.get()
-        serializer_activities = FeaturedTourSerializer(activities)
+        try:
+            activities = FeaturedTour.objects.get()
+            featured_tours = Activity.objects.filter(id__in=activities.featured_tours.all())
+            popular_tours = Activity.objects.filter(id__in=activities.popular_tours.all())
+            best_selling_tours = Activity.objects.filter(id__in=activities.best_selling_tours.all())
+            favourite_tours = Activity.objects.filter(id__in=activities.favourite_tours.all())
+            banner_tour = Activity.objects.filter(id=activities.banner_tour.id).first() if activities.banner_tour else None
+        except FeaturedTour.DoesNotExist:
+            featured_tours = []
+            popular_tours = []
+            best_selling_tours = []
+            favourite_tours = []
+            banner_tour = None
 
+        featured_serializer = ActivitySmallestSerializer(featured_tours, many=True)
+        popular_serializer = ActivitySmallestSerializer(popular_tours, many=True)
+        best_selling_serializer = ActivitySmallestSerializer(best_selling_tours, many=True)
+        favourite_serializer = ActivitySmallestSerializer(favourite_tours, many=True)
+        banner_serializer = ActivitySmallestSerializer(banner_tour) if banner_tour else None
+        
         activity_category = ActivityCategory.objects.all()
         serializer_activity_category = ActivityCategory2Serializer(activity_category, many=True)
         
@@ -288,11 +304,11 @@ def landing_page(request):
         return Response({
           "hero_content":hero_content_serializer.data,
           "recent_posts":posts_serializer.data,
-          "featured_activities":serializer_activities.data["featured_tours"],
-          "popular_activities":serializer_activities.data["popular_tours"],
-          "best_selling_activities":serializer_activities.data["best_selling_tours"],
-          "favourite_activities":serializer_activities.data["favourite_tours"],
-          "banner_activity":serializer_activities.data["banner_tour"],
+          "featured_activities":featured_serializer.data,
+          "popular_activities":popular_serializer.data,
+          "best_selling_activities":best_selling_serializer.data,
+          "favourite_activities":favourite_serializer.data,
+          "banner_activity":banner_serializer.data if banner_serializer else {},
           "activity_categories":serializer_activity_category.data,
           "team_members":teammembers_serializer.data,
           "testimonials":testimonial_serializer.data,
