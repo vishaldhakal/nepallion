@@ -278,7 +278,7 @@ def landing_page(request):
             popular_tours = Activity.objects.filter(id__in=activities.popular_tours.all())
             best_selling_tours = Activity.objects.filter(id__in=activities.best_selling_tours.all())
             favourite_tours = Activity.objects.filter(id__in=activities.favourite_tours.all())
-            banner_tour = activities.banner_tour
+            banner_tour = activities.banner_tour.first()  # Get the first banner tour if exists
         except FeaturedTour.DoesNotExist:
             featured_tours = []
             popular_tours = []
