@@ -124,16 +124,16 @@ class ActivitySmallSerializer(serializers.ModelSerializer):
         fields = ('id','slug', 'activity_title', 'activity_category','enquiries','location','duration','price','coverImg','ratings','popular','best_selling','destination','activity_region','priceSale','youtube_link')
         depth = 1
 
-class ActivitySmallSerializer(serializers.ModelSerializer):
+class ActivitySmallestSerializer(serializers.ModelSerializer):
     destination = DestinationSerializerSmall()
     activity_category = ActivityCategorySerializer(many=True, read_only=True)
     activity_region = ActivityRegionSerializer(read_only=True)
-    enquiries = ActivityEnquirySerializer(many=True, read_only=True)
+    
     class Meta:
         model = Activity
-        fields = ('id', 'slug', 'activity_title', 'activity_category', 'enquiries', 
-                 'location', 'duration', 'price', 'coverImg', 'ratings', 'popular', 
-                 'best_selling', 'destination', 'activity_region', 'priceSale', 'youtube_link')
+        fields = ('id', 'slug', 'activity_title', 'destination', 'duration', 'price', 
+                 'priceSale', 'trip_grade', 'max_group_size', 'best_time', 'activity_category',
+                 'activity_region', 'coverImg')
         depth = 1
 
 class ActivitySlugSerializer(serializers.ModelSerializer):
