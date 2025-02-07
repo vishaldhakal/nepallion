@@ -456,32 +456,3 @@ def destination_detail(request, slug):
             {'error': str(e)}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
-
-@api_view(['GET'])
-def destinations_list(request):
-    try:
-        destinations = Destination.objects.all()
-        serializer = DestinationNameSlugSerializer(destinations, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    except Exception as e:
-        return Response(
-            {'error': str(e)}, 
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR
-        )
-
-@api_view(['GET'])
-def destination_detail(request, slug):
-    try:
-        destination = Destination.objects.get(slug=slug)
-        serializer = DestinationDetailSerializer(destination)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    except Destination.DoesNotExist:
-        return Response(
-            {'error': 'Destination not found'}, 
-            status=status.HTTP_404_NOT_FOUND
-        )
-    except Exception as e:
-        return Response(
-            {'error': str(e)}, 
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR
-        )
