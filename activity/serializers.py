@@ -132,7 +132,9 @@ class ActivitySmallSerializer(serializers.ModelSerializer):
 class DestinationListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Destination
-        fields = ('name', 'slug', 'thumnail_image')
+        fields = ('meta_title', 'meta_description', 'order', 'name', 'slug', 
+                 'destination_small_detail', 'destination_detail', 'thumnail_image', 
+                 'thumnail_image_alt_description')
 
 class ActivityRegionInDestinationSerializer(serializers.ModelSerializer):
     class Meta:
