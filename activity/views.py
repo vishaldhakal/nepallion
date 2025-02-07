@@ -104,7 +104,7 @@ def sign_view(request):
     except Exception as e:
         # Handle exceptions appropriately
         return Response({'error': str(e)})
-    
+
 @api_view(['GET'])
 def activities_collection(request):
     if request.method == 'GET':
@@ -393,3 +393,31 @@ def activity_autocomplete(request):
         })
     
     return Response(results, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def activity_category_detail(request, slug):
+    try:
+        # Get the category
+        category = ActivityCategory.objects.get(slug=slug)
+        category_serializer = ActivityCategorySerializer(category)
+        
+        # Get all activities for this category
+        activities = Activity.objects.filter(activity_category=category)
+        activities_serializer = ActivitySerializer(activities, many=True)
+        
+        response_data = {
+            'category': category_serializer.data,
+            'activities': activities_serializer.data
+        }
+        
+        return Response(response_data, status=status.HTTP_200_OK)
+    except ActivityCategory.DoesNotExist:
+        return Response(
+            {'error': 'Activity category not found'}, 
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        return Response(
+            {'error': str(e)}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )

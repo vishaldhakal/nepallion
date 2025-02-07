@@ -11,6 +11,7 @@ urlpatterns = [
     path('activities-region-slug/', views.activities_reg_slug),
     path('destinations-slug/', views.destination_slug),
     path('activitiy-categories/', views.activity_categories_collection),
+    path('activity-category/<str:slug>/', views.activity_category_detail),
     path('activities-all/<str:slug>/', views.activities_all),
     path('activities-region-wise/<str:slug>/', views.activities_all_region),
     path('activities-featured/', views.activities_featured),
