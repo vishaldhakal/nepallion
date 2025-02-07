@@ -66,6 +66,18 @@ class DestinationSerializerSmall(serializers.ModelSerializer):
         model = Destination
         fields = ('name',)
 
+class DestinationNameSlugSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Destination
+        fields = ('name', 'slug')
+
+class DestinationDetailSerializer(serializers.ModelSerializer):
+    activities = ActivityCategoryDetailSerializer(many=True, read_only=True, source='activity_set')
+    
+    class Meta:
+        model = Destination
+        fields = '__all__'
+
 class ActivityCategory2Serializer(serializers.ModelSerializer):
     class Meta:
         model = ActivityCategory

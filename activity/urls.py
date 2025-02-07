@@ -10,6 +10,8 @@ urlpatterns = [
     path('activities-regions/', views.activities_regions),
     path('activities-region-slug/', views.activities_reg_slug),
     path('destinations-slug/', views.destination_slug),
+    path('destinations/', views.destinations_list),  # New endpoint for destination names and slugs
+    path('destination/<str:slug>/', views.destination_detail),  # New endpoint for destination details with activities
     path('activitiy-categories/', views.activity_categories_collection),
     path('activity-category/<str:slug>/', views.activity_category_detail),
     path('activities-all/<str:slug>/', views.activities_all),

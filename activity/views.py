@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework import status
 from .models import Activity,ActivityCategory,ActivityBooking,Destination,ActivityTestimonial,ItineraryActivity,ActivityImage,ActivityRegion, ActivityCheckout
-from .serializers import ActivityCategorySlugSerializer,ActivityTestimonialSerializer,ActivityBookingSerializer,ActivityRegionSlugSerializer,DestinationSerializerSmall,ActivitySlugSerializer,DestinationSerializer,ActivityCategorySerializer,ActivitySerializer,ItineraryActivitySerializer,ActivityImageSerializer,ActivitySmallSerializer,ActivityRegionSerializer,ActivityRegionSmallSerializer, ActivityCheckoutSerializer, ActivityCategoryDetailSerializer
+from .serializers import ActivityCategorySlugSerializer,ActivityTestimonialSerializer,ActivityBookingSerializer,ActivityRegionSlugSerializer,DestinationSerializerSmall,ActivitySlugSerializer,DestinationSerializer,ActivityCategorySerializer,ActivitySerializer,ItineraryActivitySerializer,ActivityImageSerializer,ActivitySmallSerializer,ActivityRegionSerializer,ActivityRegionSmallSerializer, ActivityCheckoutSerializer, ActivityCategoryDetailSerializer, DestinationNameSlugSerializer, DestinationDetailSerializer
 import json
 from django.core import serializers
 from django.db.models import DateField
@@ -414,6 +414,35 @@ def activity_category_detail(request, slug):
     except ActivityCategory.DoesNotExist:
         return Response(
             {'error': 'Activity category not found'}, 
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        return Response(
+            {'error': str(e)}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+@api_view(['GET'])
+def destinations_list(request):
+    try:
+        destinations = Destination.objects.all()
+        serializer = DestinationNameSlugSerializer(destinations, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response(
+            {'error': str(e)}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+@api_view(['GET'])
+def destination_detail(request, slug):
+    try:
+        destination = Destination.objects.get(slug=slug)
+        serializer = DestinationDetailSerializer(destination)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Destination.DoesNotExist:
+        return Response(
+            {'error': 'Destination not found'}, 
             status=status.HTTP_404_NOT_FOUND
         )
     except Exception as e:
