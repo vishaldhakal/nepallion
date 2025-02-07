@@ -424,8 +424,20 @@ def activity_category_detail(request, slug):
 
 @api_view(['GET'])
 def destinations_list(request):
+    try:
+        destinations = Destination.objects.all()
+        serializer = DestinationNameSlugSerializer(destinations, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response(
+            {'error': str(e)}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+@api_view(['GET'])
+def destinations_list_detailed(request):
     """
-    Get list of all destinations with name, thumbnail image and slug
+    Get list of all destinations with detailed information
     """
     try:
         destinations = Destination.objects.all().order_by('order', 'name')
@@ -439,9 +451,6 @@ def destinations_list(request):
 
 @api_view(['GET'])
 def destination_detail(request, slug):
-    """
-    Get destination details and all associated activities
-    """
     try:
         destination = Destination.objects.get(slug=slug)
         serializer = DestinationDetailSerializer(destination)

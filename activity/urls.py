@@ -9,8 +9,9 @@ urlpatterns = [
     path('activitiy-categories-slug/', views.activities_cat_slug),
     path('activities-regions/', views.activities_regions),
     path('activities-region-slug/', views.activities_reg_slug),
-    path('destinations/', views.destinations_list),  # List all destinations with name, thumbnail and slug
-    path('destination/<str:slug>/', views.destination_detail),  # Get destination details with activities
+    path('destinations/', views.destinations_list, name='destinations_list'),
+    path('destinations/detailed/', views.destinations_list_detailed, name='destinations_list_detailed'),
+    path('destination/<str:slug>/', views.destination_detail, name='destination_detail'),
     path('activitiy-categories/', views.activity_categories_collection),
     path('activity-category/<str:slug>/', views.activity_category_detail),
     path('activities-all/<str:slug>/', views.activities_all),

@@ -66,7 +66,10 @@ class DestinationSerializerSmall(serializers.ModelSerializer):
         model = Destination
         fields = ('name',)
 
-# Removing DestinationNameSlugSerializer as it's no longer needed
+class DestinationNameSlugSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Destination
+        fields = ('name', 'slug')
 
 class ActivityCategory2Serializer(serializers.ModelSerializer):
     class Meta:
