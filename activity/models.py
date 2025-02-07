@@ -6,11 +6,24 @@ class Destination(models.Model):
      meta_description = models.TextField(blank=True)
      order = models.IntegerField(blank=True)
      name = models.CharField(max_length=200)
-     slug = models.SlugField(max_length=200, blank=True)
+     slug = models.SlugField(max_length=200, unique=True)
      destination_small_detail = models.TextField(blank=True)
      destination_detail = tinymce_models.HTMLField(blank=True)
      thumnail_image = models.FileField(blank=True)
      thumnail_image_alt_description = models.CharField(max_length=200,default="Alt Description")
+
+     def save(self, *args, **kwargs):
+          if not self.slug:
+               from django.utils.text import slugify
+               base_slug = slugify(self.name)
+               slug = base_slug
+               counter = 1
+               # Handle duplicate slugs by appending a number
+               while Destination.objects.filter(slug=slug).exists():
+                    slug = f"{base_slug}-{counter}"
+                    counter += 1
+               self.slug = slug
+          super().save(*args, **kwargs)
 
      def __str__(self) -> str:
           return self.name
