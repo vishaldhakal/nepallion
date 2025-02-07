@@ -6,7 +6,7 @@ class Destination(models.Model):
      meta_description = models.TextField(blank=True)
      order = models.IntegerField(blank=True)
      name = models.CharField(max_length=200)
-     slug = models.SlugField(max_length=200, unique=True)
+     slug = models.SlugField(max_length=200, unique=True)  
      destination_small_detail = models.TextField(blank=True)
      destination_detail = tinymce_models.HTMLField(blank=True)
      thumnail_image = models.FileField(blank=True)
