@@ -465,3 +465,18 @@ def destination_detail(request, slug):
             {'error': str(e)}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+
+@api_view(['GET'])
+def destination_lists(request):
+    """
+    Get list of all destinations with full details
+    """
+    try:
+        destinations = Destination.objects.all().order_by('order', 'name')
+        serializer = DestinationListSerializer(destinations, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response(
+            {'error': str(e)}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
