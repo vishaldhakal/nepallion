@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework import status
 from .models import Activity,ActivityCategory,ActivityBooking,Destination,ActivityTestimonial,ItineraryActivity,ActivityImage,ActivityRegion, ActivityCheckout
-from .serializers import ActivityCategorySlugSerializer,ActivityTestimonialSerializer,ActivityBookingSerializer,ActivityRegionSlugSerializer,DestinationSerializerSmall,ActivitySlugSerializer,DestinationSerializer,ActivityCategorySerializer,ActivitySerializer,ItineraryActivitySerializer,ActivityImageSerializer,ActivitySmallSerializer,ActivityRegionSerializer,ActivityRegionSmallSerializer, ActivityCheckoutSerializer
+from .serializers import ActivityCategorySlugSerializer,ActivityTestimonialSerializer,ActivityBookingSerializer,ActivityRegionSlugSerializer,DestinationSerializerSmall,ActivitySlugSerializer,DestinationSerializer,ActivityCategorySerializer,ActivitySerializer,ItineraryActivitySerializer,ActivityImageSerializer,ActivitySmallSerializer,ActivityRegionSerializer,ActivityRegionSmallSerializer, ActivityCheckoutSerializer, ActivityCategoryDetailSerializer
 import json
 from django.core import serializers
 from django.db.models import DateField
@@ -401,9 +401,9 @@ def activity_category_detail(request, slug):
         category = ActivityCategory.objects.get(slug=slug)
         category_serializer = ActivityCategorySerializer(category)
         
-        # Get all activities for this category
+        # Get all activities for this category with selected fields
         activities = Activity.objects.filter(activity_category=category)
-        activities_serializer = ActivitySerializer(activities, many=True)
+        activities_serializer = ActivityCategoryDetailSerializer(activities, many=True)
         
         response_data = {
             'category': category_serializer.data,

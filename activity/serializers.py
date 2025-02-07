@@ -141,6 +141,20 @@ class ActivitySlugSerializer(serializers.ModelSerializer):
         model = Activity
         fields = ('id','slug')
 
+class ActivityCategoryDetailSerializer(serializers.ModelSerializer):
+    destination = DestinationSerializerSmall()
+    activity_region = ActivityRegionSerializer()
+    
+    class Meta:
+        model = Activity
+        fields = [
+            'id', 'slug', 'activity_title', 'enquiries', 'location', 
+            'duration', 'price', 'coverImg', 'ratings', 'popular', 
+            'best_selling', 'destination', 'activity_region', 'priceSale',
+            'youtube_link', 'trip_grade', 'max_group_size', 'trip_duration',
+            'group_size', 'trip_type', 'max_height'
+        ]
+
 class ActivityCheckoutSerializer(serializers.ModelSerializer):
     class Meta:
         model = ActivityCheckout
