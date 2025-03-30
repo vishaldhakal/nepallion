@@ -165,6 +165,8 @@ class ActivityBooking(models.Model):
     emergency_phone = models.CharField(max_length=400,blank=True)
     emergency_email = models.CharField(max_length=400,blank=True)
     emergency_relationship = models.CharField(max_length=400,blank=True)
+    group_size = models.CharField(max_length=50, blank=True)
+    group_price_id = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
         return "Booking for " + self.activity.activity_title

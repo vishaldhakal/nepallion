@@ -128,6 +128,8 @@ def BookingSubmission(request):
         arrival_date_str = request.POST.get("arrival_date", "")
         private_booking = request.POST.get("private_booking", "False")
         departure_date_str = request.POST.get("departure_date", "")
+        group_size = request.POST.get("group_size", "")
+        group_price_id = request.POST.get("group_price_id", "")
 
         booking_date = datetime.strptime(booking_date_str, '%Y-%m-%dT%H:%M:%S.%fZ')
         arrival_date = datetime.strptime(arrival_date_str, '%Y-%m-%dT%H:%M:%S.%fZ') if arrival_date_str else None
@@ -150,7 +152,8 @@ def BookingSubmission(request):
             "no_of_guests": request.POST["no_of_guests"],
             "booking_date": request.POST["booking_date"],
             "activity": act.activity_title,
-            "slug": request.POST["slug"]
+            "slug": request.POST["slug"],
+            "group_size": group_size
         }
 
         html_content = render_to_string("contactForm3.html", contex)
@@ -193,6 +196,10 @@ def BookingSubmission(request):
             new_booking.emergency_email = emergency_email
         if "emergency_relationship" in request.POST:
             new_booking.emergency_relationship = emergency_relationship
+        if "group_size" in request.POST:
+            new_booking.group_size = group_size
+        if "group_price_id" in request.POST:
+            new_booking.group_price_id = group_price_id
         new_booking.save()
 
         return HttpResponse("Sucess")
