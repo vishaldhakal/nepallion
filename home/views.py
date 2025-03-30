@@ -13,8 +13,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from datetime import datetime
 from datetime import date
-
-
+import re
 
 @api_view(["POST"])
 def ContactFormSubmission(request):
@@ -113,96 +112,106 @@ def PlanTripSubmit(request):
 @api_view(["POST"])
 def BookingSubmission(request):
     if request.method == "POST":
-        subject = "Booking of Activity"
-        email = "Yeti Hikes <info@nepallions.com>"
-        headers = {'Reply-To': request.POST["email"]}
+        try:
+            subject = "Booking of Activity"
+            email = "Yeti Hikes <info@nepallions.com>"
+            headers = {'Reply-To': request.POST["email"]}
 
-        name = request.POST.get("name", "")
-        address = request.POST.get("address", "")
-        emaill = request.POST.get("email", "")
-        phone = request.POST.get("phone", "")
-        message = request.POST.get("message", "")
-        no_of_guests = int(request.POST.get("no_of_guests", "0"))
-        total_price = float(request.POST.get("total_price", "0.0"))
-        booking_date_str = request.POST.get("booking_date", "")
-        arrival_date_str = request.POST.get("arrival_date", "")
-        private_booking = request.POST.get("private_booking", "False")
-        departure_date_str = request.POST.get("departure_date", "")
-        group_size = request.POST.get("group_size", "")
-        group_price_id = request.POST.get("group_price_id", "")
+            name = request.POST.get("name", "")
+            address = request.POST.get("address", "")
+            emaill = request.POST.get("email", "")
+            phone = request.POST.get("phone", "")
+            message = request.POST.get("message", "")
 
-        booking_date = datetime.strptime(booking_date_str, '%Y-%m-%dT%H:%M:%S.%fZ')
-        arrival_date = datetime.strptime(arrival_date_str, '%Y-%m-%dT%H:%M:%S.%fZ') if arrival_date_str else None
-        departure_date = datetime.strptime(departure_date_str, '%Y-%m-%dT%H:%M:%S.%fZ') if departure_date_str else None
+            try:
+                no_of_guests = int(request.POST.get("no_of_guests", "0"))
+            except ValueError:
+                no_of_guests_str = request.POST.get("no_of_guests", "1")
+                match = re.search(r'(\d+)', no_of_guests_str)
+                no_of_guests = int(match.group(1)) if match else 1
 
-        emergency_contact_name = request.POST.get("emergency_contact_name", "")
-        emergency_address = request.POST.get("emergency_address", "")
-        emergency_phone = request.POST.get("emergency_phone", "")
-        emergency_email = request.POST.get("emergency_email", "")
-        emergency_relationship = request.POST.get("emergency_relationship", "")
+            total_price = float(request.POST.get("total_price", "0.0"))
+            booking_date_str = request.POST.get("booking_date", "")
+            arrival_date_str = request.POST.get("arrival_date", "")
+            private_booking = request.POST.get("private_booking", "False")
+            departure_date_str = request.POST.get("departure_date", "")
+            group_size = request.POST.get("group_size", "")
+            group_price_id = request.POST.get("group_price_id", "")
 
-        act = Activity.objects.get(slug=request.POST["slug"])
+            booking_date = datetime.strptime(booking_date_str, '%Y-%m-%dT%H:%M:%S.%fZ')
+            arrival_date = datetime.strptime(arrival_date_str, '%Y-%m-%dT%H:%M:%S.%fZ') if arrival_date_str else None
+            departure_date = datetime.strptime(departure_date_str, '%Y-%m-%dT%H:%M:%S.%fZ') if departure_date_str else None
 
-        contex = {
-            "name": request.POST["name"],
-            "email": request.POST["email"],
-            "phone": request.POST["phone"],
-            "message": request.POST["message"],
-            "total_price": request.POST["total_price"],
-            "no_of_guests": request.POST["no_of_guests"],
-            "booking_date": request.POST["booking_date"],
-            "activity": act.activity_title,
-            "slug": request.POST["slug"],
-            "group_size": group_size
-        }
+            emergency_contact_name = request.POST.get("emergency_contact_name", "")
+            emergency_address = request.POST.get("emergency_address", "")
+            emergency_phone = request.POST.get("emergency_phone", "")
+            emergency_email = request.POST.get("emergency_email", "")
+            emergency_relationship = request.POST.get("emergency_relationship", "")
 
-        html_content = render_to_string("contactForm3.html", contex)
-        text_content = strip_tags(html_content)
+            act = Activity.objects.get(slug=request.POST["slug"])
 
-        msg = EmailMultiAlternatives(subject, "You have been sent a Contact Form Submission. Unable to Receive !", email, ["nepallions790@gmail.com"], headers=headers)
-        msg.attach_alternative(html_content, "text/html")
-        msg.send()
+            contex = {
+                "name": request.POST["name"],
+                "email": request.POST["email"],
+                "phone": request.POST["phone"],
+                "message": request.POST["message"],
+                "total_price": request.POST["total_price"],
+                "no_of_guests": no_of_guests,
+                "booking_date": request.POST["booking_date"],
+                "activity": act.activity_title,
+                "slug": request.POST["slug"],
+                "group_size": group_size
+            }
+
+            html_content = render_to_string("contactForm3.html", contex)
+            text_content = strip_tags(html_content)
+
+            msg = EmailMultiAlternatives(subject, "You have been sent a Contact Form Submission. Unable to Receive !", email, ["nepallions790@gmail.com"], headers=headers)
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
 
 
-        new_booking = ActivityBooking.objects.create(
-            activity=act,
-            name=name,
-            address=address,
-            email=emaill,
-            no_of_guests=no_of_guests,
-            total_price=total_price,
-            booking_date=booking_date
-        )
-        if "private_booking" in request.POST:
-            if private_booking == "True":
-                new_booking.is_private = True
-            else:
-                new_booking.is_private = False
-        if "phone" in request.POST:
-            new_booking.phone = phone
-        if "message" in request.POST:
-            new_booking.message = message
-        if "arrival_date" in request.POST:
-            new_booking.arrival_date = arrival_date
-        if "departure_date" in request.POST:
-            new_booking.departure_date = departure_date
-        if "emergency_contact_name" in request.POST:
-            new_booking.emergency_contact_name = emergency_contact_name
-        if "emergency_address" in request.POST:
-            new_booking.emergency_address = emergency_address
-        if "emergency_phone" in request.POST:
-            new_booking.emergency_phone = emergency_phone
-        if "emergency_email" in request.POST:
-            new_booking.emergency_email = emergency_email
-        if "emergency_relationship" in request.POST:
-            new_booking.emergency_relationship = emergency_relationship
-        if "group_size" in request.POST:
-            new_booking.group_size = group_size
-        if "group_price_id" in request.POST:
-            new_booking.group_price_id = group_price_id
-        new_booking.save()
+            new_booking = ActivityBooking.objects.create(
+                activity=act,
+                name=name,
+                address=address,
+                email=emaill,
+                no_of_guests=no_of_guests,
+                total_price=total_price,
+                booking_date=booking_date
+            )
+            if "private_booking" in request.POST:
+                if private_booking == "True":
+                    new_booking.is_private = True
+                else:
+                    new_booking.is_private = False
+            if "phone" in request.POST:
+                new_booking.phone = phone
+            if "message" in request.POST:
+                new_booking.message = message
+            if "arrival_date" in request.POST:
+                new_booking.arrival_date = arrival_date
+            if "departure_date" in request.POST:
+                new_booking.departure_date = departure_date
+            if "emergency_contact_name" in request.POST:
+                new_booking.emergency_contact_name = emergency_contact_name
+            if "emergency_address" in request.POST:
+                new_booking.emergency_address = emergency_address
+            if "emergency_phone" in request.POST:
+                new_booking.emergency_phone = emergency_phone
+            if "emergency_email" in request.POST:
+                new_booking.emergency_email = emergency_email
+            if "emergency_relationship" in request.POST:
+                new_booking.emergency_relationship = emergency_relationship
+            if "group_size" in request.POST:
+                new_booking.group_size = group_size
+            if "group_price_id" in request.POST:
+                new_booking.group_price_id = group_price_id
+            new_booking.save()
 
-        return HttpResponse("Sucess")
+            return HttpResponse("Success")
+        except Exception as e:
+            return HttpResponse(f"Error: {str(e)}", status=400)
     else:
         return HttpResponse("Not post req")
 
