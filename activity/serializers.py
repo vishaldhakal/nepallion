@@ -96,7 +96,8 @@ class ActivityImageSerializer(serializers.ModelSerializer):
 class ActivityPricingSerializer(serializers.ModelSerializer):
     class Meta:
         model = ActivityPricing
-        fields = '__all__'
+        exclude = ('activity',)
+        depth = 1
 
 class ActivityFAQSerializer(serializers.ModelSerializer):
     class Meta:

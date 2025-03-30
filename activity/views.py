@@ -3,8 +3,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework import status
-from .models import Activity,ActivityCategory,ActivityBooking,Destination,ActivityTestimonial,ItineraryActivity,ActivityImage,ActivityRegion, ActivityCheckout
-from .serializers import ActivityCategorySlugSerializer,ActivityTestimonialSerializer,ActivityBookingSerializer,ActivityRegionSlugSerializer,DestinationSerializerSmall,ActivitySlugSerializer,DestinationSerializer,ActivityCategorySerializer,ActivitySerializer,ItineraryActivitySerializer,ActivityImageSerializer,ActivitySmallSerializer,ActivityRegionSerializer,ActivityRegionSmallSerializer, ActivityCheckoutSerializer, ActivityCategoryDetailSerializer, DestinationNameSlugSerializer, DestinationDetailSerializer, DestinationListSerializer
+from .models import Activity,ActivityCategory,ActivityBooking,Destination,ActivityTestimonial,ItineraryActivity,ActivityImage,ActivityRegion, ActivityCheckout, ActivityPricing
+from .serializers import ActivityCategorySlugSerializer,ActivityTestimonialSerializer,ActivityBookingSerializer,ActivityRegionSlugSerializer,DestinationSerializerSmall,ActivitySlugSerializer,DestinationSerializer,ActivityCategorySerializer,ActivitySerializer,ItineraryActivitySerializer,ActivityImageSerializer,ActivitySmallSerializer,ActivityRegionSerializer,ActivityRegionSmallSerializer, ActivityCheckoutSerializer, ActivityCategoryDetailSerializer, DestinationNameSlugSerializer, DestinationDetailSerializer, DestinationListSerializer, ActivityPricingSerializer
 import json
 from django.core import serializers
 from django.db.models import DateField
@@ -234,7 +234,7 @@ def activities_regions(request):
 def activities_single(request,slug):
     if request.method == 'GET':
         today = timezone.now().date()
-        activity = Activity.objects.get(slug=slug)
+        activity = Activity.objects.prefetch_related('prices').get(slug=slug)
         bookings = ActivityBooking.objects.filter(activity=activity,booking_date__gte=today)
         testimonials = ActivityTestimonial.objects.filter(activity=activity)
         testimonials_ser = ActivityTestimonialSerializer(testimonials,many=True)
@@ -253,6 +253,7 @@ def activities_single(request,slug):
             grouped_bookings.append(ActivityBookingSerializer(boki, many=True).data)
 
         serializer_activities = ActivitySerializer(activity)
+        
         return Response({"data":serializer_activities.data,"bookings":grouped_bookings,"dates":unique_dates,"testimonials":testimonials_ser.data})
     
 
