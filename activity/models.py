@@ -81,6 +81,7 @@ class Activity(models.Model):
     popular = models.BooleanField()
     best_selling = models.BooleanField()
     featured = models.BooleanField(default=False)
+    slider = models.BooleanField(default=False)
     tour_description = tinymce_models.HTMLField()
     tour_highlights = tinymce_models.HTMLField()
     tour_includes = tinymce_models.HTMLField()
@@ -111,6 +112,8 @@ class Activity(models.Model):
             strrr+=" Best Selling "
           if self.featured:
             strrr+=" Featured "
+          if self.slider:
+            strrr+=" Slider "
           
           strrr+="]"
           return self.activity_title + strrr

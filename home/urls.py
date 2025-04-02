@@ -16,4 +16,5 @@ urlpatterns = [
     path('booking-submit/', views.BookingSubmission),
     path('newsletter-submit/', views.Newsletter),
     path('team-single/<int:id>/', views.teams_single),
+    path('slidertours/', views.slider_tours),
 ]

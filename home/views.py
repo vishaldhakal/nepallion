@@ -383,3 +383,13 @@ def teams_single(request,id):
         return Response({
           "team_member":teammembers_serializer.data,
         })
+
+@api_view(["GET"])
+def slider_tours(request):
+    try:
+        featured_tour = FeaturedTour.objects.prefetch_related('slider_tours__prices').get()
+        slider_tours = featured_tour.slider_tours.all()
+        serializer = ActivitySmallSerializer(slider_tours, many=True)
+        return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+    except FeaturedTour.DoesNotExist:
+        return Response({"status": "error", "message": "No slider tours found"}, status=status.HTTP_404_NOT_FOUND)

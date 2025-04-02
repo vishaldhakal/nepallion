@@ -70,6 +70,7 @@ class FeaturedTour(SingletonModel):
     best_selling_tours = models.ManyToManyField(Activity,blank=True,limit_choices_to={'best_selling': True},related_name="best_selling_tours")
     favourite_tours = models.ManyToManyField(Activity,blank=True,related_name="favourite_tours")
     banner_tour = models.ManyToManyField(Activity,blank=True,related_name="banner_tour")
+    slider_tours = models.ManyToManyField(Activity,blank=True,limit_choices_to={'slider': True},related_name="slider_tours")
 
     def __str__(self) -> str:
         return "Featured, Popular and Best Selling Tours"
