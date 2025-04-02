@@ -66,8 +66,9 @@ class ActivityAdmin(ModelAdmin):
         "featured",
         "best_selling",
         "popular",
+        "slider",
     )
-    list_filter = ("featured", "best_selling", "popular", "destination")
+    list_filter = ("featured", "best_selling", "popular", "slider", "destination")
 
     fieldsets = (
         ("Basic Information", {
@@ -75,7 +76,7 @@ class ActivityAdmin(ModelAdmin):
                 ("activity_title", "slug"),
                 ("destination", "activity_category", "activity_region"),
                 ("price", "priceSale"),
-                ("popular", "best_selling", "featured"),
+                ("popular", "best_selling", "featured", "slider"),
                 ("youtube_link")
             )
         }),
