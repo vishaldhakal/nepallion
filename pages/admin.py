@@ -8,11 +8,12 @@ class PageAdmin(ModelAdmin):
     list_display = ['title', 'slug', 'is_active', 'created_at', 'updated_at']
     list_filter = ['is_active', 'created_at', 'updated_at']
     search_fields = ['title', 'content', 'meta_title', 'meta_description']
-    prepopulated_fields = {'slug': ('title',)}
+    # Removed prepopulated_fields to allow manual entry of slugs with slashes
     readonly_fields = ['created_at', 'updated_at']
     fieldsets = (
         ('Basic Information', {
-            'fields': ('title', 'slug', 'is_active')
+            'fields': ('title', 'slug', 'is_active'),
+            'description': 'Slug can include slashes for nested routes (e.g., "about-us/team"). Each segment should be URL-friendly.'
         }),
         ('Content', {
             'fields': ('content',),

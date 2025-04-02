@@ -4,7 +4,7 @@ from tinymce.models import HTMLField
 
 class Page(models.Model):
     title = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.CharField(max_length=255, unique=True, blank=True, help_text="Can include slashes for nested routes (e.g., 'about-us/team')")
     content = HTMLField()
     
     # SEO Fields
@@ -33,7 +33,20 @@ class Page(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
+            # Create a basic slug from the title
+            base_slug = slugify(self.title)
+            self.slug = base_slug
+        
+        # Make sure we don't try to slugify the parts that already have slashes
+        if '/' in self.slug:
+            # Keep the slashes but slugify each part
+            parts = self.slug.split('/')
+            slugified_parts = [slugify(part) if not slugify(part) else part for part in parts]
+            self.slug = '/'.join(slugified_parts)
+        else:
+            # Just slugify the whole thing if there are no slashes
+            self.slug = slugify(self.slug)
+            
         if not self.meta_title:
             self.meta_title = self.title[:60]  # Use first 60 chars of title if meta_title not provided
         super().save(*args, **kwargs)
